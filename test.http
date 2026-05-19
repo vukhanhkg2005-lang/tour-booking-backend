@@ -1,0 +1,160 @@
+@baseUrl = http://localhost:5000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMGMyNzgyMTY0M2I2OWJhMGFhZGZhYSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3OTE4MTQ0MywiZXhwIjoxNzgxNzczNDQzfQ.ckxNhn_p3P1kR7MQ0PCqApSSMONj-w-xLq5R7HyHmqc
+
+### ==========================================
+### AUTHENTICATION
+### ==========================================
+
+### Đăng ký tài khoản mới
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Admin Test",
+  "email": "admin2@gmail.com",
+  "password": "password123",
+  "role": "ADMIN"
+}
+
+### Đăng nhập (Lấy Token)
+# Copy chuỗi token trả về sau khi login thành công và thay vào biến @token ở dòng 2
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "password123"
+}
+
+### ==========================================
+### CUSTOMER (Khách hàng)
+### ==========================================
+
+### Xem danh sách Tours (Public)
+GET {{baseUrl}}/tours
+
+### Tạo Booking mới (Cần Token)
+POST {{baseUrl}}/bookings
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "tourId": "60d21b4667d0d8992e610c85",
+  "numberOfPeople": 2,
+  "totalPrice": 1500000
+}
+
+### Hủy Booking (Cần Token)
+PUT {{baseUrl}}/bookings/60d21b4667d0d8992e610c85/cancel
+Authorization: Bearer {{token}}
+
+
+### ==========================================
+### STAFF / OPERATOR / GUIDE / SALE (Nhân viên)
+### ==========================================
+
+### Thêm Tour mới (OPERATOR, ADMIN)
+POST {{baseUrl}}/tours
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Tour Đà Nẵng - Hội An",
+  "description": "Tour du lịch 3 ngày 2 đêm",
+  "price": 2500000,
+  "duration": 3
+}
+
+### Sửa thông tin Tour (OPERATOR, ADMIN)
+PUT {{baseUrl}}/tours/60d21b4667d0d8992e610c85
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "price": 2600000
+}
+
+### Xóa Tour (OPERATOR, ADMIN)
+DELETE {{baseUrl}}/tours/60d21b4667d0d8992e610c85
+Authorization: Bearer {{token}}
+
+### Lấy danh sách Khách hàng (OPERATOR, ADMIN)
+GET {{baseUrl}}/customers
+Authorization: Bearer {{token}}
+
+### Lấy lịch trình Tour (GUIDE, ADMIN)
+GET {{baseUrl}}/schedules
+Authorization: Bearer {{token}}
+
+### Tạo báo giá (SALE, ADMIN)
+POST {{baseUrl}}/quotes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerId": "60d21b4667d0d8992e610c85",
+  "tourId": "60d21b4667d0d8992e610c85",
+  "quotedPrice": 2400000
+}
+
+
+### ==========================================
+### ACCOUNTANT (Kế toán)
+### ==========================================
+
+### Tạo hóa đơn (ACCOUNTANT, ADMIN)
+POST {{baseUrl}}/invoices
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "bookingId": "60d21b4667d0d8992e610c85",
+  "amount": 1500000,
+  "status": "PAID"
+}
+
+### Xem Báo cáo tài chính (ACCOUNTANT, ADMIN, MANAGER)
+GET {{baseUrl}}/reports/financial
+Authorization: Bearer {{token}}
+
+
+### ==========================================
+### MANAGER / ADMIN (Quản lý)
+### ==========================================
+
+### Lấy danh sách Users (MANAGER, ADMIN)
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+### Tạo User mới (MANAGER, ADMIN)
+POST {{baseUrl}}/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Tran Van B",
+  "email": "manager@gmail.com",
+  "password": "password123",
+  "role": "MANAGER"
+}
+
+### Cập nhật User (MANAGER, ADMIN)
+PUT {{baseUrl}}/users/60d21b4667d0d8992e610c85
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "role": "ADMIN"
+}
+
+### Xóa User (MANAGER, ADMIN)
+DELETE {{baseUrl}}/users/60d21b4667d0d8992e610c85
+Authorization: Bearer {{token}}
+
+### Xem báo cáo tổng quan (MANAGER, ADMIN)
+GET {{baseUrl}}/reports/general
+Authorization: Bearer {{token}}
+
+### Sao lưu hệ thống (ADMIN)
+POST {{baseUrl}}/system/backup
+Authorization: Bearer {{token}}
