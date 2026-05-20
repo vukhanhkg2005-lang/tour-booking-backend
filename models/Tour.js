@@ -8,7 +8,10 @@ const TourSchema = new mongoose.Schema({
   durationDays: { type: Number, required: true },
   maxParticipants: { type: Number, required: true },
   currentParticipants: { type: Number, default: 0 },
-  startDate: { type: Date, required: true }
+  startDate: { type: Date, required: true },
+  image: { type: String },
+  rating: { type: Number, default: 4.8 },
+  reviews: { type: Number, default: 0 }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Tour", TourSchema);

@@ -31,8 +31,21 @@ const getFinancialReport = async (req, res) => {
       { $group: { _id: null, totalRevenue: { $sum: "$amount" }, invoiceCount: { $sum: 1 } } }
     ]);
 
+    const invoices = await Invoice.find()
+      .populate({
+        path: "booking",
+        populate: {
+          path: "tour",
+          select: "name price"
+        }
+      })
+      .sort("-issuedAt");
+
     const report = revenue.length > 0 ? revenue[0] : { totalRevenue: 0, invoiceCount: 0 };
-    res.status(200).json(report);
+    res.status(200).json({
+      ...report,
+      invoices
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

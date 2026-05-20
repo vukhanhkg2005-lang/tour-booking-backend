@@ -54,18 +54,34 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const Invoice = require("../models/Invoice");
+
 const getGeneralReport = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
     const totalTours = await Tour.countDocuments();
     const totalBookings = await Booking.countDocuments();
     const confirmedBookings = await Booking.countDocuments({ status: "CONFIRMED" });
+    
+    const revenueAgg = await Invoice.aggregate([
+      { $match: { status: "PAID" } },
+      { $group: { _id: null, totalRevenue: { $sum: "$amount" } } }
+    ]);
+    const totalRevenue = revenueAgg.length > 0 ? revenueAgg[0].totalRevenue : 0;
+
+    const recentBookings = await Booking.find()
+      .populate("user", "name email")
+      .populate("tour", "name")
+      .sort("-bookingDate")
+      .limit(10);
 
     res.status(200).json({
       totalUsers,
       totalTours,
       totalBookings,
-      confirmedBookings
+      confirmedBookings,
+      totalRevenue,
+      recentBookings
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

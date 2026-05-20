@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
   "name": "Admin Test",
-  "email": "admin2@gmail.com",
+  "email": "admin5@gmail.com",
   "password": "password123",
   "role": "ADMIN"
 }
@@ -59,10 +59,10 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "title": "Tour Đà Nẵng - Hội An",
-  "description": "Tour du lịch 3 ngày 2 đêm",
-  "price": 2500000,
-  "duration": 3
+  "title": "Tour Hà Nội - Sa Pa",
+  "description": "Tour du lịch 2 ngày 1 đêm",
+  "price": 1500000,
+  "duration": 2
 }
 
 ### Sửa thông tin Tour (OPERATOR, ADMIN)
